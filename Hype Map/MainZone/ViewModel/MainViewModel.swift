@@ -150,8 +150,8 @@ final class MainViewModel: NSObject, ObservableObject, CLLocationManagerDelegate
             withAnimation(.spring()) {
                 login_status = false
             }
-        } catch {
-            
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
 }
