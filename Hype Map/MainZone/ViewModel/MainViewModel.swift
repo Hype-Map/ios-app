@@ -145,13 +145,8 @@ final class MainViewModel: NSObject, ObservableObject, CLLocationManagerDelegate
     }
     
     func logOut() {
-        do {
-            try? Auth.auth().signOut()
-            withAnimation(.spring()) {
-                login_status = false
-            }
-        } catch let error {
-            print(error.localizedDescription)
+        withAnimation(.spring()) {
+            login_status = false
         }
     }
 }

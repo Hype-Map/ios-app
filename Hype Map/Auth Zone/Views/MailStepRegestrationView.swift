@@ -24,7 +24,7 @@ struct MailStepRegestrationView: View {
                 
                 VStack(spacing: 25) {
                     NavigationLink(tag: true, selection: $goNext) {
-                       PasswordStepRegestrationView()
+                       CodeSentRegistrationView()
                     } label: {
                         EmptyView()
                     }
@@ -51,7 +51,9 @@ struct MailStepRegestrationView: View {
                         
                         HypeCircleButton(buttonColor: emailValid ? .mainColor : .gray, iconColor: .white, icon: "arrowshape.forward.fill") {
                             generator.notificationOccurred(.success)
-                            goNext = true
+                            viewModel.sendCode() { bool in
+                                goNext = bool
+                            }
                         }
                         .disabled(!emailValid)
                         .animation(.spring(), value: emailValid)
@@ -65,6 +67,9 @@ struct MailStepRegestrationView: View {
         .highPriorityGesture(DragGesture().onEnded({
             self.handleSwipe(translation: $0.translation.width)
         }))
+        .onAppear() {
+            viewModel.showTextError = false
+        }
     }
     
     private func handleSwipe(translation: CGFloat) {

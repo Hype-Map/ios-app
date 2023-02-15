@@ -19,6 +19,26 @@ enum IconWeather: String {
     case sun = "Clear"
 }
 
+var url: String {
+    "http://127.0.0.1:8080/"
+}
+
+var sendEmailUrl: String {
+    "send_code"
+}
+
+var checkNick: String {
+    "check_nick"
+}
+
+var registrationUrl: String {
+    "registration"
+}
+
+var loginUrl: String {
+    "login"
+}
+
 final class ApiManager {
     static let shared = ApiManager()
     
@@ -30,6 +50,57 @@ final class ApiManager {
                 completition(weather)
             } else {
                 print(ApiError.runtimeError("Parse error"))
+            }
+        }
+    }
+    
+    func sendEmailCode(email: String, completition: @escaping(BaseResponse) -> Void) {
+        AF.request(url + sendEmailUrl + "/" + email, method: .post).response { responseData in
+            guard let data = responseData.data else { return }
+            if let email = try? JSONDecoder().decode(BaseResponse.self, from: data) {
+                completition(email)
+            } else {
+                print(ApiError.runtimeError("Parse error"))
+            }
+        }
+    }
+    
+    func sendCodeToVerify(email: String, code: String, completition: @escaping(BaseResponse) -> Void) {
+        AF.request(url + sendEmailUrl + "/" + email + "/" + code, method: .post).response { responseData in
+            guard let data = responseData.data else { return }
+            if let email = try? JSONDecoder().decode(BaseResponse.self, from: data) {
+                completition(email)
+            } else {
+                print(ApiError.runtimeError("Parse error"))
+            }
+        }
+    }
+    
+    func checkUniqueNickname(nick: String, completition: @escaping(BaseResponse) -> Void) {
+        AF.request(url + checkNick + "/" + nick, method: .post).response { responseData in
+            guard let data = responseData.data else { return }
+            if let email = try? JSONDecoder().decode(BaseResponse.self, from: data) {
+                completition(email)
+            } else {
+                print(ApiError.runtimeError("Parse error"))
+            }
+        }
+    }
+    
+    func registration(parametrs: [String:Any], completition: @escaping(User) -> Void) {
+        AF.request(url + registrationUrl, method: .post, parameters: parametrs).response { responseData in
+            guard let data = responseData.data else { return }
+            if let user = try? JSONDecoder().decode(User.self, from: data) {
+                completition(user)
+            }
+        }
+    }
+    
+    func login(parametrs: [String:Any], completition: @escaping(User) -> Void) {
+        AF.request(url + loginUrl, method: .post, parameters: parametrs).response { responseData in
+            guard let data = responseData.data else { return }
+            if let user = try? JSONDecoder().decode(User.self, from: data) {
+                completition(user)
             }
         }
     }

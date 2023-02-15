@@ -30,6 +30,9 @@
 		654DDFE22977BCA900981D73 /* HypeErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654DDFE12977BCA800981D73 /* HypeErrorAlert.swift */; };
 		654DDFE42977F3D100981D73 /* ShakeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654DDFE32977F3D100981D73 /* ShakeAnimation.swift */; };
 		6555997829869774005413BF /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6555997729869774005413BF /* NetworkMonitor.swift */; };
+		6570D76C299CAB4000D62DFF /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6570D76B299CAB4000D62DFF /* BaseResponse.swift */; };
+		6570D76E299CB71500D62DFF /* CodeSentRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6570D76D299CB71500D62DFF /* CodeSentRegistrationView.swift */; };
+		6570D770299CC30100D62DFF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6570D76F299CC30100D62DFF /* User.swift */; };
 		65919618298069C8000BCC9B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65919617298069C8000BCC9B /* MainViewModel.swift */; };
 		6591961B29807976000BCC9B /* HypeMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6591961A29807976000BCC9B /* HypeMark.swift */; };
 		6591961E29807DE6000BCC9B /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6591961D29807DE6000BCC9B /* Location.swift */; };
@@ -63,6 +66,9 @@
 		654DDFE12977BCA800981D73 /* HypeErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HypeErrorAlert.swift; sourceTree = "<group>"; };
 		654DDFE32977F3D100981D73 /* ShakeAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeAnimation.swift; sourceTree = "<group>"; };
 		6555997729869774005413BF /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		6570D76B299CAB4000D62DFF /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
+		6570D76D299CB71500D62DFF /* CodeSentRegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeSentRegistrationView.swift; sourceTree = "<group>"; };
+		6570D76F299CC30100D62DFF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		65919617298069C8000BCC9B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		6591961A29807976000BCC9B /* HypeMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HypeMark.swift; sourceTree = "<group>"; };
 		6591961D29807DE6000BCC9B /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
@@ -115,6 +121,7 @@
 			children = (
 				65B52D61297544540058D435 /* MainAuthScreen.swift */,
 				654DDFCD2976C39800981D73 /* MailStepRegestrationView.swift */,
+				6570D76D299CB71500D62DFF /* CodeSentRegistrationView.swift */,
 				654DDFD42976CC8000981D73 /* PasswordStepRegestrationView.swift */,
 				654DDFD62976D55000981D73 /* NickStepRegistrationView.swift */,
 				654DDFDC2976DDB200981D73 /* MailLoginStepView.swift */,
@@ -186,6 +193,8 @@
 			children = (
 				6591961D29807DE6000BCC9B /* Location.swift */,
 				65A41F7329839BBC00501C21 /* WeatherModels.swift */,
+				6570D76B299CAB4000D62DFF /* BaseResponse.swift */,
+				6570D76F299CC30100D62DFF /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -375,11 +384,13 @@
 				65B52D55297543FF0058D435 /* ContentView.swift in Sources */,
 				654DDFD32976C5E600981D73 /* HypeRegistrationField.swift in Sources */,
 				659196222981987A000BCC9B /* SettingView.swift in Sources */,
+				6570D770299CC30100D62DFF /* User.swift in Sources */,
 				654DDFDD2976DDB200981D73 /* MailLoginStepView.swift in Sources */,
 				6591962029817711000BCC9B /* HypeGlassButton.swift in Sources */,
 				65A41F7229839AA800501C21 /* ApiManager.swift in Sources */,
 				654DDFD52976CC8000981D73 /* PasswordStepRegestrationView.swift in Sources */,
 				65B52D62297544540058D435 /* MainAuthScreen.swift in Sources */,
+				6570D76C299CAB4000D62DFF /* BaseResponse.swift in Sources */,
 				654DDFD72976D55000981D73 /* NickStepRegistrationView.swift in Sources */,
 				654DDFCA2975BC8700981D73 /* AuthViewModel.swift in Sources */,
 				6591961B29807976000BCC9B /* HypeMark.swift in Sources */,
@@ -391,6 +402,7 @@
 				65A41F7429839BBC00501C21 /* WeatherModels.swift in Sources */,
 				6591961E29807DE6000BCC9B /* Location.swift in Sources */,
 				654DDFCE2976C39800981D73 /* MailStepRegestrationView.swift in Sources */,
+				6570D76E299CB71500D62DFF /* CodeSentRegistrationView.swift in Sources */,
 				65B52D6929754ACF0058D435 /* HypeButton.swift in Sources */,
 				654DDFDF2976DDFA00981D73 /* PasswordLoginStepView.swift in Sources */,
 				654DDFE22977BCA900981D73 /* HypeErrorAlert.swift in Sources */,

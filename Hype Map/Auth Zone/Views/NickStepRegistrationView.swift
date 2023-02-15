@@ -44,16 +44,23 @@ struct NickStepRegistrationView: View {
                     
                     HypeCircleButton(buttonColor: nicklValid ? .mainColor : .gray, iconColor: .white, icon: "arrowshape.forward.fill") {
                         generator.notificationOccurred(.success)
-                        viewModel.emailSignUp()
+                        viewModel.signUp()
                     }
                     .disabled(!nicklValid)
                     .animation(.spring(), value: nicklValid)
                 }
                 .padding(.horizontal, 12)
                 
-                if viewModel.showTextError {
+                if viewModel.nickAlreadyExists {
                     HStack {
-                        Text("Этот Email уже зарегистрирован! 😨")
+                        Text("Такой ник уже занят... 😢")
+                            .font(.system(size: 17))
+                            .bold()
+                            .foregroundColor(.red)
+                    }
+                } else if viewModel.showTextError {
+                    HStack {
+                        Text("Этот пользователь уже есть у нас 🤔")
                             .font(.system(size: 17))
                             .bold()
                             .foregroundColor(.red)

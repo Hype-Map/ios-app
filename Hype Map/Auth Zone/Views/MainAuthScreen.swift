@@ -49,11 +49,6 @@ struct MainAuthScreen: View {
                     
                     VStack(spacing: 15) {
                         SignInWithAppleButton { (request) in
-                            
-                            viewModel.nonce = randomNonceString()
-                            request.requestedScopes = [.email, .fullName]
-                            request.nonce = sha256(viewModel.nonce)
-                            
                         } onCompletion: { (result) in
                             switch result {
                             case .success(let user):
@@ -64,8 +59,6 @@ struct MainAuthScreen: View {
                                     print("credential firebase error")
                                     return
                                 }
-                                
-                                viewModel.authenicate(credential: credential)
                                 
                             case .failure(let error):
                                 print(error.localizedDescription)

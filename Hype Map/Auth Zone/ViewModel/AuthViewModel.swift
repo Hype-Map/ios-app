@@ -10,38 +10,16 @@ import Combine
 import Foundation
 import CryptoKit
 import AuthenticationServices
-import Firebase
-
-enum FirebaseError {
-    case noUser
-    case wrongPasswordLong
-    case wrongEmail
-    case wrongPassword
-    case emailAlreadyInUse
-    
-    var error: String {
-        switch self {
-        case .noUser:
-            return "There is no user record corresponding to this identifier. The user may have been deleted."
-        case .wrongPasswordLong:
-            return "The password must be 6 characters long or more."
-        case .wrongEmail:
-            return "The email address is badly formatted."
-        case .wrongPassword:
-            return "The password is invalid or the user does not have a password."
-        case .emailAlreadyInUse:
-            return "The email address is already in use by another account."
-        }
-    }
-}
 
 class AuthViewModel: ObservableObject {
+    static let shared = AuthViewModel()
     
     @Published var nonce = ""
     
     @Published var registerStepEmail = ""
     @Published var registerStepPassword = ""
     @Published var registerStepNickName = ""
+    @Published var code = ""
     
     @Published var loginStepEmail = ""
     @Published var loginStepPassword = ""
@@ -49,99 +27,106 @@ class AuthViewModel: ObservableObject {
     @Published var showAlertYPostion: CGFloat = 1000
     @Published var someError = false
     @Published var showTextError = false
+    @Published var nickAlreadyExists = false
     @Published var loading = false
     @Published var noUser = false
     
     @AppStorage("login_status") var login_status = false
     
-    func authenicate(credential: ASAuthorizationAppleIDCredential) {
-        
-        //Getting token
-        guard let token = credential.identityToken else {
-            print("token error")
-            return
+    private let apiShared = ApiManager.shared
+    
+    func sendCode(comletition: @escaping(Bool) -> Void) {
+        self.showTextError = false
+        apiShared.sendEmailCode(email: registerStepEmail) { _ in
+            comletition(true)
         }
-        
-        //Convert token to string
-        guard let tokenString = String(data: token, encoding: .utf8) else {
-            print("error convert token to string")
-            return
-        }
-        
-        let firebaseCredential = OAuthProvider.credential(withProviderID: "apple.com", idToken: tokenString, rawNonce: nonce)
-        
-        Auth.auth().signIn(with: firebaseCredential) { (result, error) in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            print("Login success")
-        }
+        comletition(true)
     }
     
-    func emailSignUp() {
+    func verifyCode(comletition: @escaping(Bool) -> Void) {
         self.showTextError = false
-        withAnimation(.spring()) {
-            self.loading = true
-        }
-        Auth.auth().createUser(withEmail: registerStepEmail, password: registerStepPassword) { result, error in
-            if error == nil {
-                if let result = result {
-                    let refDataBase = Database.database().reference().child("Users")
-                    refDataBase.child(result.user.uid).updateChildValues(["Name" : self.registerStepNickName, "Email": self.registerStepEmail])
-                    
-                    withAnimation(.spring()) {
-                        self.login_status = true
-                    }
-                }
-            } else if error?.localizedDescription == FirebaseError.emailAlreadyInUse.error {
-                self.someError = true
+        apiShared.sendCodeToVerify(email: registerStepEmail, code: code) { response in
+            if response.reason == "Code was wrong" {
+                comletition(!response.error)
                 withAnimation(.spring()) {
-                    self.showAlertYPostion = 0
-                    self.loading = false
-                    self.showTextError = true
+                    self.someError = response.error
+                    self.showTextError = response.error
                 }
+            } else if response.reason == "Email_verify" {
+                comletition(response.error)
             }
         }
     }
     
-    func sigInWithEmail() {
+    private func checkUniqueNickname(comletition: @escaping(Bool) -> Void) {
         self.showTextError = false
-        withAnimation(.spring()) {
-            self.loading = true
+        apiShared.checkUniqueNickname(nick: registerStepNickName) { response in
+            if response.reason == "Nickname already exist" {
+                comletition(!response.error)
+                withAnimation(.spring()) {
+                    self.loading = false
+                    self.someError = response.error
+                    self.nickAlreadyExists = response.error
+                }
+            } else if response.reason == "Nick free" {
+                comletition(response.error)
+            }
         }
-        Auth.auth().signIn(withEmail: loginStepEmail, password: loginStepPassword) { result, error in
-            if error?.localizedDescription == FirebaseError.noUser.error {
-                self.someError = true
-                self.noUser = true
+    }
+    
+    func signUp() {
+        self.showTextError = false
+        self.nickAlreadyExists = false
+        
+        checkUniqueNickname { bool in
+            if bool {
+                var parametrs:[String:Any] = [:]
+                parametrs["name"] = self.registerStepNickName
+                parametrs["email"] = self.registerStepEmail
+                parametrs["password"] = self.registerStepPassword
                 withAnimation(.spring()) {
-                    self.showAlertYPostion = 0
-                    self.loading = false
-                    self.showTextError = true
+                    self.loading = true
                 }
-            } else if error?.localizedDescription == FirebaseError.wrongPassword.error {
-                self.someError = true
-                withAnimation(.spring()) {
-                    self.showAlertYPostion = 0
-                    self.loading = false
-                    self.showTextError = true
-                }
-            } else if error == nil {
-                withAnimation(.spring()) {
+                self.apiShared.registration(parametrs: parametrs) { user in
+                    print(user.email)
+                    print(user.name)
                     self.login_status = true
-                    self.loading = false
-                    self.showTextError = true
                 }
-            } else if error != nil {
-                self.someError = true
                 withAnimation(.spring()) {
                     self.loading = false
+                    self.someError = true
+                    self.showTextError = true
+                }
+            } else {
+                withAnimation(.spring()) {
+                    self.loading = false
+                    self.someError = true
+                    self.showTextError = true
                 }
             }
         }
     }
-}
+    
+    func sigIn() {
+        withAnimation(.spring()) {
+            self.loading = true
+        }
+        self.showTextError = false
+        self.someError = false
+        var parametrs:[String:Any] = [:]
+        parametrs["email"] = self.loginStepEmail
+        parametrs["password"] = self.loginStepPassword
+        apiShared.login(parametrs: parametrs) { user in
+            withAnimation(.spring()) {
+                self.login_status = true
+            }
+        }
+        withAnimation(.spring()) {
+            self.loading = false
+            self.someError = true
+            self.showTextError = true
+        }
+    }
     
     //Helpers for Apple logi
     func randomNonceString(length: Int = 32) -> String {
@@ -184,3 +169,4 @@ class AuthViewModel: ObservableObject {
         
         return hashString
     }
+}
