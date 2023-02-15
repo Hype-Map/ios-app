@@ -87,20 +87,24 @@ final class ApiManager {
         }
     }
     
-    func registration(parametrs: [String:Any], completition: @escaping(User) -> Void) {
+    func registration(parametrs: [String:Any], completition: @escaping(User) -> Void, completitionError: @escaping(BaseResponse) -> Void) {
         AF.request(url + registrationUrl, method: .post, parameters: parametrs).response { responseData in
             guard let data = responseData.data else { return }
             if let user = try? JSONDecoder().decode(User.self, from: data) {
                 completition(user)
+            } else if let error = try? JSONDecoder().decode(BaseResponse.self, from: data) {
+                completitionError(error)
             }
         }
     }
     
-    func login(parametrs: [String:Any], completition: @escaping(User) -> Void) {
+    func login(parametrs: [String:Any], completition: @escaping(User) -> Void, completitionError: @escaping(BaseResponse) -> Void) {
         AF.request(url + loginUrl, method: .post, parameters: parametrs).response { responseData in
             guard let data = responseData.data else { return }
             if let user = try? JSONDecoder().decode(User.self, from: data) {
                 completition(user)
+            } else if let error = try? JSONDecoder().decode(BaseResponse.self, from: data) {
+                completitionError(error)
             }
         }
     }

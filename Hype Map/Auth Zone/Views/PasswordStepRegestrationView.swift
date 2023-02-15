@@ -20,7 +20,7 @@ struct PasswordStepRegestrationView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blueColor]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blackMain]), startPoint: .top, endPoint: .bottomTrailing).edgesIgnoringSafeArea(.all)
                 
                 NavigationLink(tag: true, selection: $goNext) {
                    NickStepRegistrationView()

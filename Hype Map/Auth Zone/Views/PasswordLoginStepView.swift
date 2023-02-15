@@ -19,7 +19,7 @@ struct PasswordLoginStepView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blueColor]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blackMain]), startPoint: .top, endPoint: .bottomTrailing).edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 25) {
                     Text("Введите пароль 🫣")

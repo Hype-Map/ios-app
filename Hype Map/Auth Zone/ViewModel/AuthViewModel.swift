@@ -74,29 +74,36 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    private func sendRequestToRegistration() {
+        var parametrs:[String:Any] = [:]
+        parametrs["name"] = self.registerStepNickName
+        parametrs["email"] = self.registerStepEmail
+        parametrs["password"] = self.registerStepPassword
+        self.apiShared.registration(parametrs: parametrs) { user in
+            print(user.email)
+            print(user.name)
+            self.login_status = true
+        } completitionError: { error in
+            if error.error {
+                withAnimation(.spring()) {
+                    self.loading = false
+                    self.someError = true
+                    self.showTextError = true
+                }
+            }
+        }
+    }
+    
     func signUp() {
         self.showTextError = false
         self.nickAlreadyExists = false
         
         checkUniqueNickname { bool in
             if bool {
-                var parametrs:[String:Any] = [:]
-                parametrs["name"] = self.registerStepNickName
-                parametrs["email"] = self.registerStepEmail
-                parametrs["password"] = self.registerStepPassword
                 withAnimation(.spring()) {
                     self.loading = true
                 }
-                self.apiShared.registration(parametrs: parametrs) { user in
-                    print(user.email)
-                    print(user.name)
-                    self.login_status = true
-                }
-                withAnimation(.spring()) {
-                    self.loading = false
-                    self.someError = true
-                    self.showTextError = true
-                }
+                self.sendRequestToRegistration()
             } else {
                 withAnimation(.spring()) {
                     self.loading = false
@@ -120,11 +127,14 @@ class AuthViewModel: ObservableObject {
             withAnimation(.spring()) {
                 self.login_status = true
             }
-        }
-        withAnimation(.spring()) {
-            self.loading = false
-            self.someError = true
-            self.showTextError = true
+        } completitionError: { error in
+            if error.error {
+                withAnimation(.spring()) {
+                    self.loading = false
+                    self.someError = true
+                    self.showTextError = true
+                }
+            }
         }
     }
     

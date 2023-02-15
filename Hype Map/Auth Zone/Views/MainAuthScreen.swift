@@ -16,7 +16,7 @@ struct MainAuthScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blueColor]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
+                LinearGradient(gradient: .init(colors: [Color.mainColor, Color.blackMain]), startPoint: .top, endPoint: .bottomTrailing).edgesIgnoringSafeArea(.all)
                 
                 NavigationLink(tag: true, selection: $goNext) {
                    MailStepRegestrationView()
@@ -25,11 +25,9 @@ struct MainAuthScreen: View {
                 }
                 
                 VStack {
-                    Image("Logo2")
-                        .resizable()
+                    Image("logotip")
                         .cornerRadius(14)
                         .frame(width: 130, height: 130)
-                        .padding(.top, 60)
                     
                     Spacer()
                     
